@@ -3,7 +3,7 @@
 **A standardized earliest-priority-date dataset for U.S. utility patents, 1980–2024.**
 
 Kyoungah Noh (Toss Insight) · Developed under the NBER Innovation Information Initiative (I3) Open Data Fellowship (2025)
-Data: [Zenodo DOI TBD] · Paper: [TBD] · Contact: knoh@toss.im
+Data: https://doi.org/10.5281/zenodo.22226012 · Code: https://github.com/knoh-albany/patentclock · Paper: manuscript in submission · Contact: knoh@toss.im
 
 ## What this is
 
@@ -15,12 +15,28 @@ Headline facts from the data: 65% of U.S. utility patents (filing years 1980–2
 
 | File | Description |
 |---|---|
-| `patent_priority_v3_250319.csv` / `.dta` | Main dataset: 13,530,767 rows, 7,826,210 utility patents. One row per chain document per patent |
+| `patentclock_v3_250319_csv.zip.part-aa` … `-af` (6 parts) | Main dataset, zipped CSV, split into ~100 MB segments for reliable transfer. Reassemble before unzipping (see below) |
+| `patentclock_v3_250319_dta.zip.part-aa` … `-ai` (9 parts) | Same dataset as a zipped Stata `.dta`, split into ~100 MB segments |
 | `patent_priority_v3 (260809).do` | Full construction code (Stata). Rebuilds the dataset end-to-end from PatentsView bulk zips |
-| `figure1 (260809).do` | Replication code for Figure 1 |
+| `figures_wpi (260903).do` | Replication code for Figures 1–3 |
 | `validation_auto_compared.csv` | 300-patent stratified validation sample with front-page adjudications |
 | `validation_spotcheck_30.csv` | 30-patent spot-check of auto-matched cases |
 | `pre1970_review_classified.csv` | Classification of all pre-1970 priority dates (incl. the Lemelson submarine family) |
+
+### Reassembling the split archives
+
+Download all parts of an archive into one folder, then concatenate and unzip (macOS/Linux; on Windows use `copy /b`):
+
+```bash
+cat patentclock_v3_250319_csv.zip.part-* > patentclock_v3_250319_csv.zip   # md5: 103ce83958ae2645c7bb1dec928dc001
+cat patentclock_v3_250319_dta.zip.part-* > patentclock_v3_250319_dta.zip   # md5: 8152068deaad2b5b1a98bf268d49cade
+unzip patentclock_v3_250319_csv.zip    # -> patent_priority_v3_250319.csv
+unzip patentclock_v3_250319_dta.zip    # -> patent_priority_v3_250319.dta
+```
+
+Verify the reassembled zips against the MD5 checksums above (`md5` on macOS, `md5sum` on Linux). The dataset itself contains 13,530,767 rows covering 7,826,210 utility patents — one row per chain document per patent.
+
+**Structure note:** the data are patent-centric. Chains are resolved separately for each patent and no cross-patent family identifier is assigned; a document claimed by several patents (e.g., a shared provisional) appears once per claiming patent, so sibling patents can be linked through overlapping `fam_doc_number` values. A patent's own filing date is `fam_doc_date` on its `fam_doc_type=="application"` row.
 
 ## Source data and vintage
 
@@ -59,13 +75,13 @@ Requires Stata 16+ and the four PatentsView zips in `raw data/PatentsView (YYMMD
 
 ```stata
 do "patent_priority_v3 (260809).do"   // set `vintage' and `rawdir' at the top
-do "figure1 (260809).do"              // Figure 1
+do "figures_wpi (260903).do"          // Figures 1-3
 ```
 
 Expected checks are printed inline (row counts, qc_flag and foreign_window tabs, Figure 1 cross-check targets).
 
 ## Citation
 
-> Noh, Kyoungah (2026). "PatentClock: A Standardized Earliest-Priority-Date Dataset for U.S. Utility Patents." [Journal TBD]. Data: Zenodo, [DOI TBD].
+> Noh, Kyoungah (2026). "PatentClock: Standardized Earliest Priority Dates for US Utility Patents." Manuscript in submission. Data: Zenodo, https://doi.org/10.5281/zenodo.22226012.
 
 License: data CC-BY-4.0, code MIT. Please also credit USPTO PatentsView as the underlying source.
