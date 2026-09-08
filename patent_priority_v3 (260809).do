@@ -274,4 +274,3 @@ replace priority_date       = "" if priority_date=="."
 
 save "claude_outputs/patent_priority_v3_`vintage'.dta", replace
 export delimited using "claude_outputs/patent_priority_v3_`vintage'.csv", replace
-¹PRO
