@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use PatentClock in your research, please cite it as below."
+title: "PatentClock: Standardized Earliest Priority Dates for US Utility Patents"
+authors:
+  - family-names: "Noh"
+    given-names: "Kyoungah"
+type: dataset
+doi: 10.5281/zenodo.22226012
+repository-code: "https://github.com/knoh-albany/patentclock"
+license: MIT
+version: v3
+date-released: 2026-09-08
